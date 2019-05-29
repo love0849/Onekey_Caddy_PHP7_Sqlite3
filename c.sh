@@ -165,6 +165,11 @@ ${INS} update -y
 ${INS} install curl -y
 }
 
+add_source10(){
+echo -e "${OK} ${GreenBG} 正在为 Ubuntu19 更新源 ${Font}"
+${INS} update -y
+${INS} install curl -y
+}
 
 #检测系统版本
 check_system(){
@@ -183,6 +188,11 @@ check_system(){
 	elif [[ "${ID}" == "debian" && ${VERSION_ID} -ge 9 ]];then
 		echo -e "${OK} ${GreenBG} 当前系统为 Debian ${VERSION_ID} ${VERSION} ${Font}"
 		add_source="add_source9"
+		INS="apt"
+		UNS="purge"
+	elif [[ "${ID}" == "ubuntu" && ${VERSION_ID} -ge 10 ]];then
+		echo -e "${OK} ${GreenBG} 当前系统为 Ubuntu ${VERSION_ID} ${VERSION} ${Font}"
+		add_source="add_source10"
 		INS="apt"
 		UNS="purge"
 	else
