@@ -137,6 +137,59 @@ is_root(){
 	fi
 }
 
+#更新源
+add_source7(){
+echo -e "${OK} ${GreenBG} 正在为 Centos7 更新源 ${Font}"
+setsebool -P httpd_can_network_connect 1 >/dev/null 2>&1
+${INS} update -y
+${INS} install curl -y
+${INS} install epel-release -y
+rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
+${INS} update -y
+}
+
+add_source8(){
+echo -e "${OK} ${GreenBG} 正在为 Debian8 更新源 ${Font}"
+${INS} update -y
+${INS} install curl -y
+curl https://www.dotdeb.org/dotdeb.gpg | apt-key add -
+echo "deb http://packages.dotdeb.org jessie all" >> /etc/apt/sources.list
+echo "deb-src http://packages.dotdeb.org jessie all" >> /etc/apt/sources.list
+${INS} update -y
+}
+
+add_source9(){
+echo -e "${OK} ${GreenBG} 正在为 Debian9 更新源 ${Font}"
+${INS} update -y
+${INS} install curl -y
+}
+
+
+#检测系统版本
+check_system(){
+	VERSION=`echo ${VERSION} | awk -F "[()]" '{print $2}'`
+
+	if [[ "${ID}" == "centos" && ${VERSION_ID} -ge 7 ]];then
+		echo -e "${OK} ${GreenBG} 当前系统为 Centos ${VERSION_ID} ${VERSION} ${Font}"
+		add_source="add_source7"
+		INS="yum"
+		UNS="erase"
+	elif [[ "${ID}" == "debian" && ${VERSION_ID} -ge 8 && ${VERSION_ID} -lt 9 ]];then
+		echo -e "${OK} ${GreenBG} 当前系统为 Debian ${VERSION_ID} ${VERSION} ${Font}"
+		add_source="add_source8"
+		INS="apt"
+		UNS="purge"
+	elif [[ "${ID}" == "debian" && ${VERSION_ID} -ge 9 ]];then
+		echo -e "${OK} ${GreenBG} 当前系统为 Debian ${VERSION_ID} ${VERSION} ${Font}"
+		add_source="add_source9"
+		INS="apt"
+		UNS="purge"
+	else
+		echo -e "${Error} ${RedBG} 当前系统为 ${ID} ${VERSION_ID} 不在支持的系统列表内，脚本终止继续安装 ${Font}"
+		exit 1
+	fi
+}
+
 
 #检测依赖
 systemd_chack(){
