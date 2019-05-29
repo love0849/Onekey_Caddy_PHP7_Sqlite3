@@ -190,7 +190,7 @@ check_system(){
 		add_source="add_source9"
 		INS="apt"
 		UNS="purge"
-	elif [[ "${ID}" == "ubuntu" && ${VERSION_ID} -ge 10 ]];then
+	elif [[ "${ID}" == "ubuntu" && ${VERSION_ID} -ge 19.04 ]];then
 		echo -e "${OK} ${GreenBG} 当前系统为 Ubuntu ${VERSION_ID} ${VERSION} ${Font}"
 		add_source="add_source10"
 		INS="apt"
